@@ -39,12 +39,19 @@ public class GamePlayController : MonoBehaviour
         Reset();
     }
 
+    float checkTime = 0;
+    float scale = 1;
     // Update is called once per frame
     void Update()
     {
-        time -= Time.deltaTime;
+        time -= scale * Time.deltaTime;
+        checkTime += Time.deltaTime;
         UpdateSlider();
 
+        if(checkTime > 10)
+        {
+            scale += 0.1f;
+        }
         if(time < 0)
         {
             GameOver();
@@ -58,7 +65,10 @@ public class GamePlayController : MonoBehaviour
 
     public void UpdateSliderByValue(float value)
     {
+        UpdateScore();
         time += value;
+        if(time >timeOfGame)
+            time = timeOfGame;
     }
 
     public void SetSlider()
@@ -68,14 +78,14 @@ public class GamePlayController : MonoBehaviour
 
     public void OnPressHandle(int index)
     {
-        if(index == playerColor)
-        {
-            UpdateScore();
-        }
-        else
-        {
-            GameOver();
-        }
+        //if(index == playerColor)
+        //{
+        //    UpdateScore();
+        //}
+        //else
+        //{
+        //    GameOver();
+        //}
     }
 
     public void GameOver()
@@ -87,7 +97,7 @@ public class GamePlayController : MonoBehaviour
 
     public void UpdateScore()
     {
-        time+=2;
+        //time+=2;
         score++;
         uiController.UpdateScore(score);
         if (score > highscore)
@@ -118,7 +128,7 @@ public class GamePlayController : MonoBehaviour
     public void Reset()
     {
         Time.timeScale = 1;
-
+        SoundController.Instance.PlayAudio(SoundController.Instance.bg, 0.3f, true);
         playerNextColor = Random.Range(0, template.Length);
         ChangeColor();
         time = timeOfGame;

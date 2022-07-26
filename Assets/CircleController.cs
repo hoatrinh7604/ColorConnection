@@ -12,6 +12,8 @@ public class CircleController : MonoBehaviour
     float distance = 10;
     bool canMove = false;
 
+    public bool death = false;
+
     [SerializeField] GameObject effect;
     private Camera cam;
     private void Start()
@@ -46,10 +48,16 @@ public class CircleController : MonoBehaviour
         {
             if(colorIndex == collision.gameObject.GetComponent<CircleController>().colorIndex)
             {
-                GamePlayController.Instance.UpdateSliderByValue(2);
-                SpawEffect();
-                Destroy(collision.gameObject);
-                Destroy(this.gameObject);
+                if (!death)
+                {
+                    death = true;
+                    collision.gameObject.GetComponent<CircleController>().death = true;
+                    SoundController.Instance.PlayAudio(SoundController.Instance.bang, 0.1f, false);
+                    GamePlayController.Instance.UpdateSliderByValue(1f);
+                    SpawEffect();
+                    Destroy(collision.gameObject);
+                    Destroy(this.gameObject);
+                }
             }
         }
     }
